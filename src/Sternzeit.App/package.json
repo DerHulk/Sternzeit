@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "~7.0.0",
     "@angular/router": "~7.0.0",
     "@types/chrome": "0.0.125",
+    "@types/webappsec-credential-management": "^0.6.0",
     "core-js": "^2.5.4",
     "rxjs": "~6.3.3",
     "service": "^0.1.4",
@@ -28,7 +29,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.10.0",
-    "@angular/cli": "~7.0.5",
+    "@angular/cli": "~10.1.7",
     "@angular/compiler-cli": "~7.0.0",
     "@angular/language-service": "~7.0.0",
     "@types/node": "~8.9.4",

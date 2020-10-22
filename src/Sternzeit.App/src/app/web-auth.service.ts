@@ -45,14 +45,13 @@ export class WebAuthService {
 
   public register(preconditions: RegisterPreconditions): void {
 
-    let keyType: PublicKeyCredentialType;
     const challengeBuffer = this.ConvertToBuffer(preconditions.Challenge);
 
     navigator.credentials.create({
       publicKey: {
         // Request ES256 algorithm
         //https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialCreationOptions/pubKeyCredParams
-        pubKeyCredParams: [{ alg: -7, type: keyType }],
+        pubKeyCredParams: [{ alg: -7, type: 'public-key' }],
         challenge: challengeBuffer,
         rp: {
           id: preconditions.RelayingPartyId,
