@@ -33,13 +33,13 @@ export class WebAuthService {
   constructor(private http: HttpClient) {
   }
 
-  public isAvailable(): Boolean {
+  public isAvailable(): boolean {
     return window.PublicKeyCredential ? true : false;
   }
 
   public loadPreconditions(userName: string): Observable<RegisterPreconditions> {
 
-    return this.http.get<RegisterPreconditions>(environment.registrationEndPoint)
+    return this.http.get<RegisterPreconditions>(environment.registrationEndPoint + '?username=' + userName)
       .pipe(map(x => { x.UserName = userName; return x; }));
   }
 
@@ -73,7 +73,7 @@ export class WebAuthService {
             //we expected a back url in response.
           }
           else {
-           throw new Error('That have not worked.');
+            throw new Error('That have not worked.');
           }
 
         });

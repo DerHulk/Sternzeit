@@ -14,7 +14,8 @@ using Microsoft.Extensions.Logging;
 namespace Sternzeit.Server
 {
     public class Startup
-    {
+    {        
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,6 +26,17 @@ namespace Sternzeit.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: Constants.OriginsPolicy,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:4200")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod()
+                                      .AllowCredentials();
+                                  });
+            });
             services.AddControllers();
         }
 
@@ -36,12 +48,10 @@ namespace Sternzeit.Server
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
+            //app.UseHttpsRedirection();            
             app.UseRouting();
-
+            app.UseCors(Constants.OriginsPolicy);
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

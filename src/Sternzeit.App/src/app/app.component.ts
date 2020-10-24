@@ -1,4 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
+import { pipe } from 'rxjs';
 import { WebAuthService } from './web-auth.service';
 
 @Component({
@@ -9,23 +10,19 @@ import { WebAuthService } from './web-auth.service';
 export class AppComponent implements OnInit {
 
   title = 'Sternzeit-App';
+  webAuthAvailable = false;
+  username = '';
 
   constructor(private webAuth: WebAuthService) {
 
   }
 
   ngOnInit(): void {
+    this.webAuthAvailable = this.webAuth.isAvailable();
+  }
 
-    if (!this.webAuth.isAvailable()) {
-      alert('Browser does not support WebAuthn.');
-    }
-    else {
-      alert('Browser support WebAuthn.');
-    }
-    // if (!window.PublicKeyCredential) {
-    //   alert('Browser does not support WebAuthn.');
-    //   return;
-    // }
+  register() {
+    this.webAuth.loadPreconditions(this.username).subscribe(x => this.webAuth.register(x));
   }
 
 }

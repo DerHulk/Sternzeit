@@ -5,10 +5,15 @@
   </h1>
 </div>
 
-<label for="Username">Username</label>
-<input name="Username" type="text" />
+<div *ngIf="webAuthAvailable">
+  <label for="Username">Username</label>
+  <input name="Username" [(ngModel)]="username" type="text" />
 
-<button>Register</button>
-<button>Login</button>
+  <button (click)="register()">Register</button>
+  <button>Login</button>
+</div>
+<div *ngIf="!webAuthAvailable">
+  <span>Your Browswer does not support webauth. :-(</span>
+</div>
 
 <router-outlet></router-outlet>
