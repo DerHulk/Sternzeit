@@ -12,15 +12,15 @@ interface WebAuthWindow {
 }
 
 class RegisterPreconditions {
-  Challenge: string;
-  RelayingPartyId: string;
-  RelayingPartyName: string;
+  challenge: string;
+  relayingPartyId: string;
+  relayingPartyName: string;
 
-  UserName: string;
-  UserDisplayName: string;
-  UserId: string;
+  userName: string;
+  userDisplayName: string;
+  userId: string;
 
-  RegisterUrl: string;
+  registerUrl: string;
 }
 
 declare var window: WebAuthWindow;
@@ -40,12 +40,12 @@ export class WebAuthService {
   public loadPreconditions(userName: string): Observable<RegisterPreconditions> {
 
     return this.http.get<RegisterPreconditions>(environment.registrationEndPoint + '?username=' + userName)
-      .pipe(map(x => { x.UserName = userName; return x; }));
+      .pipe(map(x => { x.userName = userName; return x; }));
   }
 
   public register(preconditions: RegisterPreconditions): void {
 
-    const challengeBuffer = this.ConvertToBuffer(preconditions.Challenge);
+    const challengeBuffer = this.ConvertToBuffer(preconditions.challenge);
 
     navigator.credentials.create({
       publicKey: {
@@ -54,19 +54,19 @@ export class WebAuthService {
         pubKeyCredParams: [{ alg: -7, type: 'public-key' }],
         challenge: challengeBuffer,
         rp: {
-          id: preconditions.RelayingPartyId,
-          name: preconditions.RelayingPartyName
+          id: preconditions.relayingPartyId,
+          name: preconditions.relayingPartyName
         },
         user: {
-          id: new TextEncoder().encode(preconditions.UserId),
-          name: preconditions.UserName,
-          displayName: preconditions.UserName,
+          id: new TextEncoder().encode(preconditions.userId),
+          name: preconditions.userName,
+          displayName: preconditions.userName,
         }
       }
     }).then((credential) => {
       const credentialsAsJson = this.ConvertToJson(credential);
 
-      this.http.post<any>(preconditions.RegisterUrl, credentialsAsJson, { observe: 'response' })
+      this.http.post<any>(preconditions.registerUrl, credentialsAsJson, { observe: 'response' })
         .subscribe(x => {
 
           if (x.ok) {
