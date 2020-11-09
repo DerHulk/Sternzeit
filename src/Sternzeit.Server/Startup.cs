@@ -18,7 +18,7 @@ namespace Sternzeit.Server
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = configuration;            
         }
 
         public IConfiguration Configuration { get; }
@@ -37,6 +37,8 @@ namespace Sternzeit.Server
                                       .AllowCredentials();
                                   });
             });
+            services.AddWebAuth("A324AACC-7E3C-4A57-8DC8-49FA253CA211", "Sternzeit");
+            services.AddMongoDb();
             services.AddControllers();
         }
 

@@ -15,5 +15,6 @@ namespace Sternzeit.Server.Models
         public string UserDisplayName { get; set; }
         public string UserId { get; set; }
         public string RegisterUrl { get; set; }
+
     }
 }

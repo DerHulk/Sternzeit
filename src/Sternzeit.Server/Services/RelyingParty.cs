@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sternzeit.Server.Services
 {
-    public class RelayingParty
+    public class RelyingParty
     {
         /// <summary>
         /// Get the Id. For example "localhost".
@@ -21,7 +21,7 @@ namespace Sternzeit.Server.Services
         
         public Lazy<byte[]> Hash { get; }
 
-        public RelayingParty(string relayingPartyId, string relayingPartyName)
+        public RelyingParty(string relayingPartyId, string relayingPartyName)
         {
             if (string.IsNullOrEmpty(relayingPartyId))
                 throw new ArgumentException("message", nameof(relayingPartyId));
