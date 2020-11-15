@@ -9,7 +9,7 @@ namespace Sternzeit.Server.Services
     {
         public DateTime Now()
         {
-            return DateTime.Now();
+            return DateTime.Now;
         }
     }
 }

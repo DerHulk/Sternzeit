@@ -12,7 +12,7 @@ using Sternzeit.Server.States;
 
 namespace Sternzeit.Server.Controllers
 {
-    [Route("[controller]")]
+    [Route("Register")]
     public class RegisterController : Controller
     {
         private MongoDbContext MongoDbContext { get; }
@@ -29,11 +29,11 @@ namespace Sternzeit.Server.Controllers
                                     ITimeService timeService,
                                     RelyingParty relayingParty)
         {
-            MongoDbContext = mongoDbContext;
+            this.MongoDbContext = mongoDbContext ?? throw new ArgumentNullException(nameof(mongoDbContext));
             this.AttestionParser = attestionParser ?? throw new ArgumentNullException(nameof(attestionParser));
             this.ClientDataParser = clientDataParser ?? throw new ArgumentNullException(nameof(clientDataParser));
             this.WebAuthService = webAuthService ?? throw new ArgumentNullException(nameof(webAuthService));
-            TimeService = timeService;
+            this.TimeService = timeService ?? throw new ArgumentNullException(nameof(TimeService));
             this.RelayingParty = relayingParty ?? throw new ArgumentNullException(nameof(relayingParty));
         }
 
@@ -52,15 +52,15 @@ namespace Sternzeit.Server.Controllers
             model.UserId = userId.ToString();
             model.UserDisplayName = userName;
 
-            model.RegisterUrl = this.Url.Action(nameof(Register));
+            model.RegisterUrl = this.Url.Action(nameof(Register), "Register", null, this.Request.Scheme);
             model.RelayingPartyId = this.RelayingParty.Id;
             model.RelayingPartyName = this.RelayingParty.Name;
-            model.Challenge = IdentityModel.CryptoRandom.CreateUniqueId(16);
+            model.Challenge = IdentityModel.CryptoRandom.CreateUniqueId(16, IdentityModel.CryptoRandom.OutputFormat.Base64);
 
             var state = new UserStates() 
             {
                 Id = userId,
-                Challenge = model.Challenge,
+                Challenge =  model.Challenge,
                 UserName = model.UserName,
                 CreationTime = this.TimeService.Now(),                
             };
@@ -71,14 +71,16 @@ namespace Sternzeit.Server.Controllers
         }
 
         [HttpPost]
-        [Route("Register")]
+        [Route("Finish")]
         public async Task<ActionResult> Register([FromBody] RegistrationModel model)
         {            
             var clientData = this.ClientDataParser.Parse(model.Response.ClientDataJson);
-            var attestion = this.AttestionParser.Parse(model.Response.AttestationObject);            
-            var state = await (await this.MongoDbContext.Users.FindAsync(x => x.Challenge == clientData.Challenge && 
+            var attestion = this.AttestionParser.Parse(model.Response.AttestationObject);         
+            //HACK: Todo 'Why are the == missing in response?'
+            var state = await (await this.MongoDbContext.Users.FindAsync(x => (x.Challenge == clientData.Challenge || x.Challenge == clientData.Challenge + "==") && 
                                                                                 x.LoginCounter == 0 && 
-                                                                                    x.RegistrationTime == null)).SingleOrDefaultAsync();
+                                                                                    x.RegistrationTime == null))
+                                                                                    .SingleOrDefaultAsync();
 
             if (state == null)
                 return this.NotFound();

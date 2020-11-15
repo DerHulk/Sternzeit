@@ -27,13 +27,5 @@ namespace Sternzeit.Server
                 return this.Database.GetCollection<UserStates>("Users");
             }
         }
-
-        public IMongoCollection<RegistrationState> Registration
-        {
-            get
-            {
-                return this.Database.GetCollection<RegistrationState>("Registration");
-            }
-        }
     }
 }

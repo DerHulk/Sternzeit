@@ -84,18 +84,7 @@ namespace Sternzeit.Server
             public byte[] RelayingPartyHash { get; set; }
         }
 
-        public class PublicKey
-        {
-            public string KeyType { get; set; }
-
-            public string Algorithm { get; set; }
-
-            public string Curve { get; set; }
-
-            public string X { get; set; }
-
-            public string Y { get; set; }
-        }
+       
 
         public ISerializationService SerializationService { get; }
        
