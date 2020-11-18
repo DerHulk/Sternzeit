@@ -5,14 +5,6 @@ using System.Threading.Tasks;
 
 namespace Sternzeit.Server.Models
 {
-    public class RegistrationModel
-    {
-            public string Id { get; set; }
-            public string RawId { get; set; }
-            public string Type { get; set; }
-            public FidoResponse Response { get; set; }     
-    }
-
     public class FidoResponse
     {
         public string AttestationObject { get; set; }

@@ -9,11 +9,12 @@ namespace Sternzeit.Server
 {
     public static class IoC
     {
-        public static IServiceCollection AddWebAuth(this IServiceCollection services, string relyingParyId, string relyingPartyName)
+        public static IServiceCollection AddWebAuth(this IServiceCollection services, string relyingParyId, string relyingPartyName, params string[] additionalOrigins)
         {
             services.AddSingleton<ISerializationService>(new SerializationService());
-            services.AddSingleton<RelyingParty>(new RelyingParty( relyingParyId, relyingPartyName));
+            services.AddSingleton<RelyingParty>(new RelyingParty( relyingParyId, relyingPartyName, additionalOrigins));            
             services.AddSingleton<AttestionParser>(x=> new AttestionParser(x.GetService<ISerializationService>()));
+            services.AddSingleton<AssertionParser>(x => new AssertionParser());
             services.AddSingleton<ClientDataParser>(x=> new ClientDataParser(x.GetService<ISerializationService>()));
             services.AddSingleton<WebAuthService>(new WebAuthService());
             services.AddSingleton<ITimeService>(new TimeService());

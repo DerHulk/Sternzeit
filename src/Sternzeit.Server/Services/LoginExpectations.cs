@@ -9,7 +9,7 @@ namespace Sternzeit.Server.Services
     public class LoginExpectations
     {
         public string Challenge { get; set; }
-        public string Origin { get; set; }
+        public string[] Origins { get; set; }
         public byte[] RelayingPartyHash { get; set; }
 
         public int Counter { get; set; }

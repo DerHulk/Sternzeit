@@ -23,6 +23,13 @@ class RegisterPreconditions {
   registerUrl: string;
 }
 
+class LoginPreconditions {
+  keyId: string;
+  challenge: string;
+  relyingPartyId: string;
+  loginCallbackUrl: string;
+}
+
 declare var window: WebAuthWindow;
 
 @Injectable({
@@ -71,6 +78,7 @@ export class WebAuthService {
 
           if (x.ok) {
             //we expected a back url in response.
+            alert('Great. You are registered. :-)');
           }
           else {
             throw new Error('That have not worked.');
@@ -116,6 +124,46 @@ export class WebAuthService {
     }
 
     return credentials;
+  }
+
+  public loadPreconditionLogin(userName): Observable<LoginPreconditions> {
+    return this.http.get<LoginPreconditions>(environment.loginEndPoint + '?username=' + userName)
+      .pipe(map(x => x));
+  }
+
+  public login(preconditions: LoginPreconditions) {
+
+    const challenge = this.ConvertToBuffer(preconditions.challenge);
+    const key = this.ConvertToBuffer(preconditions.keyId);
+
+    const allowCredentials = [
+      {
+        type: <PublicKeyCredentialType>'public-key',
+        id: key,
+        transports: <AuthenticatorTransport[]>['usb']
+      }
+    ];
+
+    const publicKey = { challenge, allowCredentials, rpId: preconditions.relyingPartyId };
+
+    navigator.credentials.get({ publicKey }).then((credential) => {
+
+      const credentialsAsJson = this.ConvertToJson(credential);
+      this.http.post<any>(preconditions.loginCallbackUrl, credentialsAsJson, { observe: 'response' })
+        .subscribe(x => {
+
+          if (x.ok) {
+            //we expected a back url in response.
+            alert('Great. You are loged in. :-)');
+          }
+          else {
+            throw new Error('That have not worked.');
+          }
+
+        });
+
+    });
+
   }
 
 }

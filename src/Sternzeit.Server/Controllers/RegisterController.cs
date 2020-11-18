@@ -9,12 +9,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using Sternzeit.Server.States;
+using Microsoft.Extensions.Logging;
 
 namespace Sternzeit.Server.Controllers
 {
     [Route("Register")]
     public class RegisterController : Controller
     {
+        public ILogger<RegisterController> Logger { get; }
         private MongoDbContext MongoDbContext { get; }
         private AttestionParser AttestionParser { get; }
         private ClientDataParser ClientDataParser { get; }
@@ -22,13 +24,15 @@ namespace Sternzeit.Server.Controllers
         private ITimeService TimeService { get; }
         private RelyingParty RelayingParty { get; }
 
-        public RegisterController(MongoDbContext mongoDbContext,
+        public RegisterController(ILogger<RegisterController> logger,
+                                    MongoDbContext mongoDbContext,
                                     AttestionParser attestionParser,
                                     ClientDataParser clientDataParser,
                                     WebAuthService webAuthService,
                                     ITimeService timeService,
                                     RelyingParty relayingParty)
         {
+            this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.MongoDbContext = mongoDbContext ?? throw new ArgumentNullException(nameof(mongoDbContext));
             this.AttestionParser = attestionParser ?? throw new ArgumentNullException(nameof(attestionParser));
             this.ClientDataParser = clientDataParser ?? throw new ArgumentNullException(nameof(clientDataParser));
@@ -59,10 +63,11 @@ namespace Sternzeit.Server.Controllers
 
             var state = new UserStates() 
             {
-                Id = userId,
+                Id = Guid.NewGuid(),
+                UserId = userId,
                 Challenge =  model.Challenge,
                 UserName = model.UserName,
-                CreationTime = this.TimeService.Now(),                
+                CreationTime = this.TimeService.Now(),                                
             };
 
             await this.MongoDbContext.Users.InsertOneAsync(state);
@@ -72,7 +77,7 @@ namespace Sternzeit.Server.Controllers
 
         [HttpPost]
         [Route("Finish")]
-        public async Task<ActionResult> Register([FromBody] RegistrationModel model)
+        public async Task<ActionResult> Register([FromBody] CredentialsModel model)
         {            
             var clientData = this.ClientDataParser.Parse(model.Response.ClientDataJson);
             var attestion = this.AttestionParser.Parse(model.Response.AttestationObject);         
@@ -91,7 +96,7 @@ namespace Sternzeit.Server.Controllers
                 RelayingPartyHash = this.RelayingParty.Hash.Value,
                 RelayingPartyId = this.RelayingParty.Id,
                 Challenge = state.Challenge,
-                Origin = this.Request.Host.Value
+                Origin = new[] { this.Request.Host.Value }.Union(this.RelayingParty.Origins).ToArray()
             };
 
             var validation = this.WebAuthService.ValidateRegistration(registration, expectation);
@@ -100,10 +105,19 @@ namespace Sternzeit.Server.Controllers
             {
                 state.PublicKey = attestion.Key;
                 state.RegistrationTime = this.TimeService.Now();
+                state.CredentialId = attestion.GetCredintailIdAsString();
+
+                if (await this.MongoDbContext.Users.CountDocumentsAsync(x => x.CredentialId == state.CredentialId) > 0)
+                {
+                    this.Logger.LogError("Duplicate credential-Id detected.");
+                    return this.BadRequest();
+                }
+                    
                 await this.MongoDbContext.Users.ReplaceOneAsync(x=> x.Id == state.Id, state);
                 return this.Ok();
             }
 
+            this.Logger.LogError(validation.ErrorMessage);
             return this.BadRequest();
         }       
     }

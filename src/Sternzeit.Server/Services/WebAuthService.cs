@@ -21,7 +21,7 @@ namespace Sternzeit.Server.Services
                     Convert.FromBase64String(expectation.Challenge)))
                 return new ValidationResult("Incorrect challenge", new[] { nameof(registrationData.ClientData.Challenge) });
 
-            if (registrationData.ClientData.Origin != expectation.Origin)
+            if (!expectation.Origin.Contains(registrationData.ClientData.Origin))
                 return new ValidationResult("Incorrect origin", new[] { nameof(registrationData.ClientData.Origin) });            
 
             //???
@@ -65,7 +65,7 @@ namespace Sternzeit.Server.Services
                 return new ValidationResult("Incorrect challenge", new[] { nameof(loginData.ClientData.Challenge) });            
 
             //Verify that the value of C.origin matches the Relying Party's origin.
-            if (loginData.ClientData.Origin != expectation.Origin)
+            if (!expectation.Origins.Contains(loginData.ClientData.Origin))
                 return new ValidationResult("Incorrect origin", new[] { nameof(loginData.ClientData.Origin) });            
 
             //Verify that the value of C.tokenBinding.status matches the state of Token Binding for the TLS connection over which the attestation was obtained.

@@ -13,6 +13,11 @@ namespace Sternzeit.Server.States
         [BsonId]
         public Guid Id { get; set; }
         
+        /// <summary>
+        /// Id given to the Fido-Authentificator.
+        /// </summary>
+        public Guid UserId { get; set; }
+
         public string UserName { get; set; }
 
         public PublicKey PublicKey { get; set; }
@@ -24,6 +29,8 @@ namespace Sternzeit.Server.States
         public DateTime CreationTime { get; set; }
 
         public DateTime? RegistrationTime{ get; set; }
+
+        public DateTime? LastLoginTime { get; set; }
 
         public int LoginCounter { get; set; } = 0;
     }

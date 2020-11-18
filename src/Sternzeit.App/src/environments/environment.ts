@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  registrationEndPoint: 'http://localhost:65354/register/preconditions'
+  registrationEndPoint: 'http://localhost:65354/register/preconditions',
+  loginEndPoint: 'http://localhost:65354/login/preconditions'
 };
 
 /*

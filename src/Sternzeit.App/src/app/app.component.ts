@@ -25,4 +25,8 @@ export class AppComponent implements OnInit {
     this.webAuth.loadPreconditions(this.username).subscribe(x => this.webAuth.register(x));
   }
 
+  login() {
+    this.webAuth.loadPreconditionLogin(this.username).subscribe(x => this.webAuth.login(x));
+  }
+
 }

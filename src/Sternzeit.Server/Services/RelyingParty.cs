@@ -21,16 +21,23 @@ namespace Sternzeit.Server.Services
         
         public Lazy<byte[]> Hash { get; }
 
-        public RelyingParty(string relayingPartyId, string relayingPartyName)
+        /// <summary>
+        /// List of origins to check. Can be helpfull if you have a single page application which
+        /// is the UI. The orgin would then be the spa url.
+        /// </summary>
+        public string[] Origins { get; }
+
+        public RelyingParty(string relayingPartyId, string relayingPartyName, params string[] externalOrigins)
         {
             if (string.IsNullOrEmpty(relayingPartyId))
                 throw new ArgumentException("message", nameof(relayingPartyId));
 
             if (string.IsNullOrEmpty(relayingPartyName))
                 throw new ArgumentException("message", nameof(relayingPartyName));
-
+            
             this.Id = relayingPartyId;
             this.Name = relayingPartyName;
+            this.Origins = externalOrigins;
 
             this.Hash = new Lazy<byte[]>(() => {
                 using (var hasher = new SHA256Managed())

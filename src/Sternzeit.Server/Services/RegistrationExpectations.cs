@@ -11,6 +11,6 @@ namespace Sternzeit.Server.Services
         public string RelayingPartyId { get; set; }
         public byte[] RelayingPartyHash { get; set; }
 
-        public string Origin { get; set; }      
+        public string[] Origin { get; set; }      
     }
 }
