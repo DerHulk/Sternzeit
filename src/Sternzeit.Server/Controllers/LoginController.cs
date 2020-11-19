@@ -11,6 +11,7 @@ using Sternzeit.Server.Models;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Sternzeit.Server.Controllers
 {
@@ -48,7 +49,7 @@ namespace Sternzeit.Server.Controllers
         public async Task<IActionResult> GetPreconditions(string userName, string redirectUrl=null)
         {
             // generate challenge
-            var challenge = CryptoRandom.CreateUniqueId(16, CryptoRandom.OutputFormat.Base64);
+            var challenge = Base64UrlEncoder.Encode(CryptoRandom.CreateUniqueId(16));
             var user = await (await this.MongoDbContext.Users.FindAsync(x => x.UserName == userName)).SingleOrDefaultAsync();
 
             user.Challenge = challenge;
@@ -72,7 +73,7 @@ namespace Sternzeit.Server.Controllers
             if (state == null)
                 return this.NotFound();
 
-            var login = new LoginData() { Assertion = assertion, ClientData = clientData };
+            var login = new LoginData() { Assertion = assertion, ClientData = clientData, Signatur = model.Response.Signature };
             var expectation = new LoginExpectations()
             {
                 RelayingPartyHash = this.RelayingParty.Hash.Value,

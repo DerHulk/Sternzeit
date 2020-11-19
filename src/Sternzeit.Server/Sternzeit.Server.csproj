@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="4.4.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.8.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="PeterO.Cbor" Version="4.2.0" />
     <PackageReference Include="MongoDB.Bson" Version="2.10.0" />

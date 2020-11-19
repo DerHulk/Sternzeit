@@ -52,7 +52,7 @@ export class WebAuthService {
 
   public register(preconditions: RegisterPreconditions): void {
 
-    const challengeBuffer = this.ConvertToBuffer(preconditions.challenge);
+    const challengeBuffer = this.convertToBuffer(preconditions.challenge);
 
     navigator.credentials.create({
       publicKey: {
@@ -71,7 +71,7 @@ export class WebAuthService {
         }
       }
     }).then((credential) => {
-      const credentialsAsJson = this.ConvertToJson(credential);
+      const credentialsAsJson = this.convertToJson(credential);
 
       this.http.post<any>(preconditions.registerUrl, credentialsAsJson, { observe: 'response' })
         .subscribe(x => {
@@ -89,35 +89,42 @@ export class WebAuthService {
     });
   }
 
-  private ConvertToBuffer(value: string) {
+  private convertToBuffer(value: string) {
     const byteCharacters = atob(value);
     const byteNumbers = new Array(byteCharacters.length);
 
     for (let i = 0; i < byteCharacters.length; i++) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
-    return new Uint8Array(byteNumbers);
+
+    const result = new Uint8Array(byteNumbers);
+
+    return result;
   }
 
-  private ConvertToJson(credentials: Credential) {
+  private bin2String(array): string {
+    return String.fromCharCode.apply(String, array);
+  }
+
+  private convertToJson(credentials: Credential) {
     if (credentials instanceof Array) {
       const arr = [];
       for (let i of credentials) {
-        arr.push(this.ConvertToJson(i));
+        arr.push(this.convertToJson(i));
       }
 
       return arr;
     }
 
     if (credentials instanceof ArrayBuffer) {
-      return btoa(String.fromCharCode.apply(null, new Uint8Array(credentials)));
+      return btoa(String.fromCharCode.apply(String, new Uint8Array(credentials)));
     }
 
     if (credentials instanceof Object) {
       const obj = {};
 
       for (let key in credentials) {
-        obj[key] = this.ConvertToJson(credentials[key]);
+        obj[key] = this.convertToJson(credentials[key]);
       }
 
       return obj;
@@ -133,8 +140,8 @@ export class WebAuthService {
 
   public login(preconditions: LoginPreconditions) {
 
-    const challenge = this.ConvertToBuffer(preconditions.challenge);
-    const key = this.ConvertToBuffer(preconditions.keyId);
+    const challenge = this.convertToBuffer(preconditions.challenge);
+    const key = this.convertToBuffer(preconditions.keyId);
 
     const allowCredentials = [
       {
@@ -148,7 +155,8 @@ export class WebAuthService {
 
     navigator.credentials.get({ publicKey }).then((credential) => {
 
-      const credentialsAsJson = this.ConvertToJson(credential);
+      const credentialsAsJson = this.convertToJson(credential);
+
       this.http.post<any>(preconditions.loginCallbackUrl, credentialsAsJson, { observe: 'response' })
         .subscribe(x => {
 

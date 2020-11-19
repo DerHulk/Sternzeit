@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using Sternzeit.Server.States;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using IdentityModel;
 
 namespace Sternzeit.Server.Controllers
 {
@@ -59,7 +61,7 @@ namespace Sternzeit.Server.Controllers
             model.RegisterUrl = this.Url.Action(nameof(Register), "Register", null, this.Request.Scheme);
             model.RelayingPartyId = this.RelayingParty.Id;
             model.RelayingPartyName = this.RelayingParty.Name;
-            model.Challenge = IdentityModel.CryptoRandom.CreateUniqueId(16, IdentityModel.CryptoRandom.OutputFormat.Base64);
+            model.Challenge = Base64UrlEncoder.Encode(CryptoRandom.CreateUniqueId(16));
 
             var state = new UserStates() 
             {

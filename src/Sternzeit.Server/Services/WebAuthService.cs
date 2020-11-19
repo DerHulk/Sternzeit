@@ -61,7 +61,7 @@ namespace Sternzeit.Server.Services
                 return new ValidationResult("Incorrect client data type", new[] { nameof(loginData.ClientData.Type) });            
 
             //Verify that the value of C.challenge matches the challenge that was sent to the authenticator in the PublicKeyCredentialRequestOptions passed to the get() call.          
-            if (!Base64Url.Decode(loginData.ClientData.Challenge).SequenceEqual(Convert.FromBase64String(expectation.Challenge)))
+            if (!Base64Url.Decode(loginData.ClientData.Challenge).SequenceEqual(Base64Url.Decode(expectation.Challenge)))
                 return new ValidationResult("Incorrect challenge", new[] { nameof(loginData.ClientData.Challenge) });            
 
             //Verify that the value of C.origin matches the Relying Party's origin.
