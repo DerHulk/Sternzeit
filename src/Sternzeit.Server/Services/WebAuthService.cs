@@ -18,7 +18,7 @@ namespace Sternzeit.Server.Services
                 return new ValidationResult("Incorrect client data type", new[] { nameof(registrationData.ClientData.Type) });
 
             if (!Base64Url.Decode(registrationData.ClientData.Challenge).SequenceEqual(
-                    Convert.FromBase64String(expectation.Challenge)))
+                    Base64Url.Decode(expectation.Challenge)))
                 return new ValidationResult("Incorrect challenge", new[] { nameof(registrationData.ClientData.Challenge) });
 
             if (!expectation.Origin.Contains(registrationData.ClientData.Origin))
@@ -105,7 +105,7 @@ namespace Sternzeit.Server.Services
 
             if (isValid)
             {
-                if (expectation.Counter > loginData.Assertion.Counter)
+                if (expectation.Counter <= loginData.Assertion.Counter)
                     return new ValidationResult("Possible cloned authenticator", new[] { nameof(loginData.Assertion.Counter) });                
             }
             else

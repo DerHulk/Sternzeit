@@ -42,6 +42,7 @@ namespace Sternzeit.Server.Controllers
             this.WebAuthService = webAuthService ?? throw new ArgumentNullException(nameof(webAuthService));
             this.TimeService = timeService ?? throw new ArgumentNullException(nameof(TimeService));
             this.RelayingParty = relayingParty ?? throw new ArgumentNullException(nameof(relayingParty));
+            
         }
 
         [HttpGet]

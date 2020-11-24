@@ -108,6 +108,7 @@ namespace Sternzeit.Server.Controllers
                 state.PublicKey = attestion.Key;
                 state.RegistrationTime = this.TimeService.Now();
                 state.CredentialId = attestion.GetCredintailIdAsString();
+                state.LoginCounter = attestion.Counter;
 
                 if (await this.MongoDbContext.Users.CountDocumentsAsync(x => x.CredentialId == state.CredentialId) > 0)
                 {

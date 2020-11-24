@@ -12,7 +12,7 @@ namespace Sternzeit.Server.Services
         public string[] Origins { get; set; }
         public byte[] RelayingPartyHash { get; set; }
 
-        public int Counter { get; set; }
+        public long Counter { get; set; }
 
         public PublicKey PublicUserKey { get; set; }
     }

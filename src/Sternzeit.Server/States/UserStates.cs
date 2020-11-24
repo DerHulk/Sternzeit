@@ -32,6 +32,6 @@ namespace Sternzeit.Server.States
 
         public DateTime? LastLoginTime { get; set; }
 
-        public int LoginCounter { get; set; } = 0;
+        public long LoginCounter { get; set; } = 0;
     }
 }

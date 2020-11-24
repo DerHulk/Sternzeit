@@ -42,6 +42,7 @@ namespace Sternzeit.Server.Services
 
             /// <summary>
             /// https://www.w3.org/TR/webauthn/#signature-counter
+            /// https://www.w3.org/TR/webauthn/#sign-counter
             /// </summary>
             public uint Counter { get; set; }
 
@@ -72,8 +73,14 @@ namespace Sternzeit.Server.Services
             result.ExistsAttestedCredentialData = flags[6];
             result.ExtensionDataIncluded = flags[7];
             
-            var counterBuf = span.Slice(0, 4);             
-            result.Counter = BitConverter.ToUInt32(counterBuf);                     
+            var counterBuf = span.Slice(0, 4).ToArray();
+
+            if (BitConverter.IsLittleEndian)
+            {                
+                counterBuf = counterBuf.Reverse().ToArray();
+            }            
+
+            result.Counter = BitConverter.ToUInt32(counterBuf,0);                     
 
             // 16. Using the credential public key looked up in step 3, verify that sig is a valid signature over the binary concatenation of aData and hash.
             result.SourceAsBase64 = Base64Url.Decode(toParse);           

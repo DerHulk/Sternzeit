@@ -43,7 +43,7 @@ namespace Sternzeit.Server
                                       .AllowCredentials();
                                   });
             });
-            services.AddWebAuth("localhost", "Sternzeit", Configuration.GetValue<string>("WebAuth:AdditionalOrigings").Split(';'));
+            services.AddWebAuth("localhost", "Sternzeit", Configuration.GetSection("WebAuth:AdditionalOrigings").Get<string[]>());
             services.AddMongoDb();
             services.AddControllers();
         }
