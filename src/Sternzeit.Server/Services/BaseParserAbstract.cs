@@ -8,10 +8,17 @@ namespace Sternzeit.Server.Services
 {
     public abstract class BaseParserAbstract
     {
-        protected (bool IsUserPresent, bool IsUserVerified, bool ExistsAttestedCredentialData, bool ExtensionDataIncluded) ParseFlags(byte[] span)
+        /// <summary>
+        /// Parse the flags from the given array.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// </remarks>
+        protected (bool IsUserPresent, bool IsUserVerified, bool ExistsAttestedCredentialData, bool ExtensionDataIncluded) ParseFlags(byte[] value)
         {
             (bool IsUserPresent, bool IsUserVerified, bool ExistsAttestedCredentialData, bool ExtensionDataIncluded) result;            
-            var flags = new BitArray(span);         
+            var flags = new BitArray(value);         
             result.IsUserPresent = flags[0]; // (UP)
             // Bit 1 reserved for future use (RFU1)
             result.IsUserVerified = flags[2]; // (UV)
@@ -22,14 +29,20 @@ namespace Sternzeit.Server.Services
             return result;
         }
 
-        protected uint ParseCounter(byte[] span)
-        {            
+        /// <summary>
+        /// Parse the Login-Counter from the given array.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        protected uint ParseCounter(byte[] value)
+        {
+            // Signature counter (4 bytes, big-endian unint32)
             if (BitConverter.IsLittleEndian)
             {
-                span = span.Reverse().ToArray();
+                value = value.Reverse().ToArray();
             }
 
-            return BitConverter.ToUInt32(span, 0);
+            return BitConverter.ToUInt32(value, 0);
 
         }
     }

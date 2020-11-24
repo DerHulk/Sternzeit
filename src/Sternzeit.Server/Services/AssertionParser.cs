@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Sternzeit.Server.Services
 {
-    public class AssertionParser
+    public class AssertionParser : BaseParserAbstract
     {
         /// <summary>
         /// Data required for login.
@@ -62,25 +62,15 @@ namespace Sternzeit.Server.Services
             // RP ID Hash (32 bytes)
             result.RelayingPartyHash = span.Slice(0, 32).ToArray(); 
             span = span.Slice(32);
-
-            // Flags (1 byte)
-            var flagsBuf = span.Slice(0, 1).ToArray();
-            var flags = new BitArray(flagsBuf); 
+                      
+            var flags = this.ParseFlags(span.Slice(0, 1).ToArray());
+            result.IsUserPresent = flags.IsUserPresent;
+            result.IsUserVerified = flags.IsUserVerified;            
+            result.ExistsAttestedCredentialData = flags.ExistsAttestedCredentialData;
+            result.ExtensionDataIncluded = flags.ExtensionDataIncluded;
             span = span.Slice(1);
-            result.IsUserPresent = flags[0];            
-            result.IsUserVerified = flags[2];
-            // Bits 3-5 reserved for future use (RFU2)
-            result.ExistsAttestedCredentialData = flags[6];
-            result.ExtensionDataIncluded = flags[7];
-            
-            var counterBuf = span.Slice(0, 4).ToArray();
 
-            if (BitConverter.IsLittleEndian)
-            {                
-                counterBuf = counterBuf.Reverse().ToArray();
-            }            
-
-            result.Counter = BitConverter.ToUInt32(counterBuf,0);                     
+            result.Counter = this.ParseCounter(span.Slice(0, 4).ToArray());                        
 
             // 16. Using the credential public key looked up in step 3, verify that sig is a valid signature over the binary concatenation of aData and hash.
             result.SourceAsBase64 = Base64Url.Decode(toParse);           

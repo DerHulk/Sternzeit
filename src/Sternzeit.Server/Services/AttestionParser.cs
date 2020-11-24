@@ -12,7 +12,7 @@ namespace Sternzeit.Server
 {
     /// <summary>    
     /// </summary>
-    public class AttestionParser
+    public class AttestionParser : BaseParserAbstract
     {
         /// <summary>
         /// Data required for Registration.
@@ -117,23 +117,19 @@ namespace Sternzeit.Server
             result.RelayingPartyHash = span.Slice(0, 32).ToArray();
             span = span.Slice(32);
 
-            var flags = new BitArray(span.Slice(0, 1).ToArray());
+            var flags = this.ParseFlags(span.Slice(0, 1).ToArray());                      
+            result.IsUserPresent = flags.IsUserPresent;
+            result.IsUserVerified = flags.IsUserVerified;
+            result.ExistsAttestedCredentialData = flags.ExistsAttestedCredentialData;
+            result.ExtensionDataIncluded = flags.ExtensionDataIncluded;
             span = span.Slice(1);
-            result.IsUserPresent = flags[0]; // (UP)
-            // Bit 1 reserved for future use (RFU1)
-            result.IsUserVerified = flags[2]; // (UV)
-            // Bits 3-5 reserved for future use (RFU2)
-            result.ExistsAttestedCredentialData = flags[6]; // (AT) 
-            result.ExtensionDataIncluded = flags[7]; // (ED)
 
-            // Signature counter (4 bytes, big-endian unint32)
-            var counterBuf = span.Slice(0, 4); span = span.Slice(4);
-            result.Counter = BitConverter.ToUInt32(counterBuf);
+            result.Counter = this.ParseCounter(span.Slice(0, 4).ToArray()); 
+            span = span.Slice(4);            
 
             // Attested Credential Data
             // cred data - AAGUID (16 bytes)            
             result.AAGuid = span.Slice(0, 16).ToArray();
-
             span = span.Slice(16);
 
             // cred data - L (2 bytes, big-endian uint16)
@@ -144,7 +140,6 @@ namespace Sternzeit.Server
             // cred data - Credential ID (L bytes)
             result.CredentialId = span.Slice(0, result.CredentialIdLength).ToArray();
             span = span.Slice(result.CredentialIdLength);
-
 
             var coseStruct = CBORObject.DecodeFromBytes(span.ToArray());
             result.Key = this.SerializationService.Deserialize<PublicKey>(coseStruct.ToJSONString());
