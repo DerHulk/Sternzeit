@@ -15,7 +15,5 @@ The following features are on the plan
 ## Remarks
 
 ### For WebAuth/Fido2
-[w3](https://www.w3.org/TR/webauthn/)
-[fido2-net-lib](https://github.com/abergs/fido2-net-lib)
-[scottbrady blog](https://www.scottbrady91.com/FIDO/A-FIDO2-Primer-and-Proof-of-Concept-using-ASPNET-Core)
-[scottbrady-git](https://github.com/scottbrady91/Fido2-Poc)
+- [w3](https://www.w3.org/TR/webauthn/)
+- [fido2-net-lib](https://github.com/abergs/fido2-net-lib), [scottbrady blog](https://www.scottbrady91.com/FIDO/A-FIDO2-Primer-and-Proof-of-Concept-using-ASPNET-Core)
