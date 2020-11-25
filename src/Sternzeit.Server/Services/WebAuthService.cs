@@ -10,6 +10,13 @@ using System.Threading.Tasks;
 
 namespace Sternzeit.Server.Services
 {
+    /// <summary>
+    /// Service for Processing Validation of WebAuth.
+    /// </summary>
+    /// <remarks>
+    /// Thanks to:
+    /// Scottbrady's (https://github.com/scottbrady91/Fido2-Poc) proof of concept.
+    /// </remarks>
     public class WebAuthService
     {
         public ValidationResult ValidateRegistration(RegistrationData registrationData, RegistrationExpectations expectation)
@@ -105,7 +112,7 @@ namespace Sternzeit.Server.Services
 
             if (isValid)
             {
-                if (expectation.Counter <= loginData.Assertion.Counter)
+                if (expectation.Counter > loginData.Assertion.Counter)
                     return new ValidationResult("Possible cloned authenticator", new[] { nameof(loginData.Assertion.Counter) });                
             }
             else
