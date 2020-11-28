@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using Sternzeit.Server.Services.Jwt;
 
 namespace Sternzeit.Server.Controllers
 {
@@ -26,6 +27,7 @@ namespace Sternzeit.Server.Controllers
         private WebAuthService WebAuthService { get; }
         private ITimeService TimeService { get; }
         private RelyingParty RelayingParty { get; }
+        public IJwtService JwtService { get; }
 
         public LoginController(ILogger<LoginController> logger,
                                     MongoDbContext mongoDbContext,
@@ -33,7 +35,8 @@ namespace Sternzeit.Server.Controllers
                                     ClientDataParser clientDataParser,
                                     WebAuthService webAuthService,
                                     ITimeService timeService,
-                                    RelyingParty relayingParty)
+                                    RelyingParty relayingParty,
+                                    IJwtService jwtService)
         {
             this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.MongoDbContext = mongoDbContext ?? throw new ArgumentNullException(nameof(mongoDbContext));
@@ -42,7 +45,7 @@ namespace Sternzeit.Server.Controllers
             this.WebAuthService = webAuthService ?? throw new ArgumentNullException(nameof(webAuthService));
             this.TimeService = timeService ?? throw new ArgumentNullException(nameof(TimeService));
             this.RelayingParty = relayingParty ?? throw new ArgumentNullException(nameof(relayingParty));
-            
+            this.JwtService = jwtService ?? throw new ArgumentNullException(nameof(jwtService));
         }
 
         [HttpGet]
@@ -95,7 +98,8 @@ namespace Sternzeit.Server.Controllers
                 await HttpContext.SignInAsync("cookie",
                        new ClaimsPrincipal(new ClaimsIdentity(new List<Claim> { new Claim("name", state.UserName) }, "cookie")));
 
-                return this.Ok();
+                var token = this.JwtService.CreateToken(state.UserName);
+                return this.Ok(token);
             }
 
             return this.BadRequest();

@@ -45,6 +45,7 @@ namespace Sternzeit.Server
             });
             services.AddWebAuth("localhost", "Sternzeit", Configuration.GetSection("WebAuth:AdditionalOrigings").Get<string[]>());
             services.AddMongoDb();
+            services.AddJwtToken(this.Configuration);
             services.AddControllers();
         }
 
@@ -59,6 +60,7 @@ namespace Sternzeit.Server
             //app.UseHttpsRedirection();            
             app.UseRouting();
             app.UseCors(Constants.OriginsPolicy);
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
