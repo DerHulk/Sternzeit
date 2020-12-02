@@ -1,5 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
+import { access } from 'fs';
 import { pipe } from 'rxjs';
+import { AccessService } from './access.service';
 import { WebAuthService } from './web-auth.service';
 
 @Component({
@@ -13,8 +15,11 @@ export class AppComponent implements OnInit {
   webAuthAvailable = false;
   username = '';
 
-  constructor(private webAuth: WebAuthService) {
+  isLogedIn = false;
 
+  constructor(private webAuth: WebAuthService, private access: AccessService) {
+
+    webAuth.LogedIn.subscribe(x => this.isLogedIn = true);
   }
 
   ngOnInit(): void {
@@ -27,6 +32,10 @@ export class AppComponent implements OnInit {
 
   login() {
     this.webAuth.loadPreconditionLogin(this.username).subscribe(x => this.webAuth.login(x));
+  }
+
+  check() {
+    this.access.get<any>('/Home/Index').subscribe(x => alert('Home sweet home!'));
   }
 
 }

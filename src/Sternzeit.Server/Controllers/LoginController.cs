@@ -94,12 +94,11 @@ namespace Sternzeit.Server.Controllers
                 state.LoginCounter++;
                 state.Challenge = null;
 
-                await this.TryUpdateModelAsync(state);
-                await HttpContext.SignInAsync("cookie",
-                       new ClaimsPrincipal(new ClaimsIdentity(new List<Claim> { new Claim("name", state.UserName) }, "cookie")));
+                await this.TryUpdateModelAsync(state);            
 
-                var token = this.JwtService.CreateToken(state.UserName);
-                return this.Ok(token);
+                var expriresAt = this.TimeService.Now().AddHours(1);
+                var token = this.JwtService.CreateToken(state.UserName, expriresAt);
+                return this.Ok( new { token, expriresAt= this.TimeService.ToUnixTimeMilliseconds(expriresAt) });
             }
 
             return this.BadRequest();

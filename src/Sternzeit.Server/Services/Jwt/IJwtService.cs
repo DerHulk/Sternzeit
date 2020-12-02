@@ -13,5 +13,13 @@ namespace Sternzeit.Server.Services.Jwt
         /// <param name="username"></param>
         /// <returns></returns>
         string CreateToken(string username);
+
+        /// <summary>
+        /// Generates an Jwt-Token for the given User.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="expriesAt"></param>
+        /// <returns></returns>
+        string CreateToken(string username, DateTime expriesAt);
     }
 }

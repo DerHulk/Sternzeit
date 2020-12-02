@@ -4,7 +4,7 @@ import { stringify } from 'querystring';
 import { ThrowStmt } from '@angular/compiler';
 import { environment } from 'src/environments/environment';
 import { promise } from 'protractor';
-import { Observable, pipe } from 'rxjs';
+import { BehaviorSubject, Observable, pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 interface WebAuthWindow {
@@ -30,12 +30,19 @@ class LoginPreconditions {
   loginCallbackUrl: string;
 }
 
+export class SuccessfullLogin {
+  token: string;
+  expiresAt: number;
+}
+
 declare var window: WebAuthWindow;
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebAuthService {
+
+  public LogedIn: BehaviorSubject<SuccessfullLogin> = new BehaviorSubject(null);
 
   constructor(private http: HttpClient) {
   }
@@ -102,10 +109,6 @@ export class WebAuthService {
     return result;
   }
 
-  private bin2String(array): string {
-    return String.fromCharCode.apply(String, array);
-  }
-
   private convertToJson(credentials: Credential) {
     if (credentials instanceof Array) {
       const arr = [];
@@ -157,12 +160,13 @@ export class WebAuthService {
 
       const credentialsAsJson = this.convertToJson(credential);
 
-      this.http.post<any>(preconditions.loginCallbackUrl, credentialsAsJson, { observe: 'response' })
+      this.http.post<SuccessfullLogin>(preconditions.loginCallbackUrl, credentialsAsJson, { observe: 'response' })
         .subscribe(x => {
 
           if (x.ok) {
-            //we expected a back url in response.
+            //we expected a back url and token in response.
             alert('Great. You are loged in. :-)');
+            this.LogedIn.next(x.body);
           }
           else {
             throw new Error('That have not worked.');

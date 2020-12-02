@@ -35,8 +35,16 @@ namespace Sternzeit.Server.Services.Jwt
         
         public string CreateToken(string username)
         {
+            return this.CreateToken(username, this.TimeService.Now().Add(DefaultTokenDuration));
+        }
+
+        public string CreateToken(string username, DateTime expriresDate)
+        {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
+
+            if (this.TimeService.Now() > expriresDate)
+                throw new ArgumentOutOfRangeException(nameof(expriresDate));
 
             using RSA rsa = RSA.Create();
             rsa.ImportRSAPrivateKey(
@@ -55,7 +63,7 @@ namespace Sternzeit.Server.Services.Jwt
                 issuer: Issuer,
                 claims: new Claim[] { new Claim(ClaimTypes.NameIdentifier, username) },
                 notBefore: jwtDate,
-                expires: jwtDate.Add(DefaultTokenDuration),
+                expires: expriresDate,
                 signingCredentials: signingCredentials
             );
 

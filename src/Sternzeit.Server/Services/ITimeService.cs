@@ -8,5 +8,6 @@ namespace Sternzeit.Server.Services
     public interface ITimeService
     {
         DateTime Now();
+        long ToUnixTimeMilliseconds(DateTime value);
     }
 }

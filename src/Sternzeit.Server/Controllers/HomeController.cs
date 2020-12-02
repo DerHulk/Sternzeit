@@ -14,7 +14,7 @@ namespace Sternzeit.Server.Controllers
         [Route("Index")]
         public IActionResult Index()
         {
-            return View();
+            return Json(new string[] { "Hallo", "Welt" });
         }
     }
 }

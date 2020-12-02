@@ -16,4 +16,9 @@
   <span>Your Browswer does not support webauth. :-(</span>
 </div>
 
+<div *ngIf="isLogedIn">
+Your are logged in.
+<button (click)="check()">check</button>
+</div>
+
 <router-outlet></router-outlet>

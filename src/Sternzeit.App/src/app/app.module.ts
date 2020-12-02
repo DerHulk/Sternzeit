@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AccessService } from './access.service';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { AppComponent } from './app.component';
     FormsModule,
   ],
   providers: [
-    { provide: 'window', useValue: window }
+    { provide: 'window', useValue: window },
+    AccessService
   ],
   bootstrap: [AppComponent]
 })
