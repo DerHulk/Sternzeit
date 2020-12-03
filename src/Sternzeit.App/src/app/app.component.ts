@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
   }
 
   check() {
-    this.access.get<any>('/Home/Index').subscribe(x => alert('Home sweet home!'));
+    this.access.get<any>('https://localhost:44370/Home/Index').subscribe(x => alert('Home sweet home!'));
   }
 
 }

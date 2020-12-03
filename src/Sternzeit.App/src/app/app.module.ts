@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AccessService } from './access.service';
+import { WebAuthService } from './web-auth.service';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,7 @@ import { AccessService } from './access.service';
   ],
   providers: [
     { provide: 'window', useValue: window },
-    AccessService
+    AccessService, WebAuthService
   ],
   bootstrap: [AppComponent]
 })

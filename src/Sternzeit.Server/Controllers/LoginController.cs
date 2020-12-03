@@ -96,9 +96,9 @@ namespace Sternzeit.Server.Controllers
 
                 await this.TryUpdateModelAsync(state);            
 
-                var expriresAt = this.TimeService.Now().AddHours(1);
-                var token = this.JwtService.CreateToken(state.UserName, expriresAt);
-                return this.Ok( new { token, expriresAt= this.TimeService.ToUnixTimeMilliseconds(expriresAt) });
+                var expiresAt = this.TimeService.Now().AddHours(1);
+                var token = this.JwtService.CreateToken(state.UserName, expiresAt);
+                return this.Ok( new { token, expiresAt = this.TimeService.ToUnixTimeMilliseconds(expiresAt) });
             }
 
             return this.BadRequest();

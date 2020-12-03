@@ -42,7 +42,8 @@ namespace Sternzeit.Server
         /// </remarks>
         public static IServiceCollection AddJwtToken(this IServiceCollection services, IConfiguration configuration)
         {            
-            var rsaKey = JwtService.GetPublicKey(configuration);
+            var publicKey = JwtService.GetPublicKey(configuration);
+            var privateKey = JwtService.GetPrivateTokenKey(configuration);
 
             services.AddAuthentication()
                .AddJwtBearer("Asymmetric", options =>
@@ -52,7 +53,7 @@ namespace Sternzeit.Server
                    // Configure the actual Bearer validation
                    options.TokenValidationParameters = new TokenValidationParameters
                    {
-                       IssuerSigningKey = rsaKey,
+                       IssuerSigningKey = publicKey,
                        ValidAudience = JwtService.Audience,
                        ValidIssuer = JwtService.Issuer,
                        RequireSignedTokens = true,
@@ -64,6 +65,7 @@ namespace Sternzeit.Server
                });
 
             services.AddSingleton<IJwtService, JwtService>();
+            services.AddSingleton(privateKey);
 
             return services;
         }

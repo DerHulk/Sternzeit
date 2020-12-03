@@ -14,9 +14,14 @@ export class AccessService {
   private expiresAt: Date;
 
   constructor(private http: HttpClient,
-              webAuthService: WebAuthService) {
+    private webAuthService: WebAuthService) {
 
-    webAuthService.LogedIn.subscribe(x => {
+    this.webAuthService.LogedIn.subscribe(x => {
+
+      if (!x) {
+        return;
+      }
+
       this.authToken = x.token,
         this.expiresAt = new Date(x.expiresAt);
     });

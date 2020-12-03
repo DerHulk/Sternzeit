@@ -21,18 +21,22 @@ namespace Sternzeit.Server.Services.Jwt
     {
         public const string Audience = "";
         public const string Issuer = "";
-        
+
         public static readonly TimeSpan DefaultTokenDuration = new TimeSpan(0, 1, 0, 0, 0);
 
         private IConfiguration Configuration { get; }
         private ITimeService TimeService { get; }
 
-        public JwtService(IConfiguration configuration, ITimeService timeService)
+        private PrivateTokenKey PrivateTokenKey { get; }
+
+
+        public JwtService(PrivateTokenKey key, IConfiguration configuration, ITimeService timeService)
         {
+            this.PrivateTokenKey = key ?? throw new ArgumentNullException(nameof(key));
             this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.TimeService = timeService ?? throw new ArgumentNullException(nameof(timeService));
         }
-        
+
         public string CreateToken(string username)
         {
             return this.CreateToken(username, this.TimeService.Now().Add(DefaultTokenDuration));
@@ -46,15 +50,10 @@ namespace Sternzeit.Server.Services.Jwt
             if (this.TimeService.Now() > expriresDate)
                 throw new ArgumentOutOfRangeException(nameof(expriresDate));
 
-            using RSA rsa = RSA.Create();
-            rsa.ImportRSAPrivateKey(
-                source: Convert.FromBase64String(this.Configuration["Jwt:Asymmetric:PrivateKey"]), // Use the private key to sign tokens
-                bytesRead: out int _); // Discard the out variable 
-
             var signingCredentials = new SigningCredentials(
-                key: new RsaSecurityKey(rsa),
-                algorithm: SecurityAlgorithms.RsaSha256
-            );
+                                          key: this.PrivateTokenKey.Key,
+                                          algorithm: SecurityAlgorithms.RsaSha256
+                                      );
 
             var jwtDate = this.TimeService.Now();
 
@@ -70,7 +69,6 @@ namespace Sternzeit.Server.Services.Jwt
             string token = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             return token;
-
         }
 
         public static RsaSecurityKey GetPublicKey(IConfiguration configuration)
@@ -86,6 +84,20 @@ namespace Sternzeit.Server.Services.Jwt
             );
 
             return new RsaSecurityKey(rsa);
+        }
+
+        public static PrivateTokenKey GetPrivateTokenKey(IConfiguration configuration)
+        {
+            if (configuration is null)
+                throw new ArgumentNullException(nameof(configuration));
+
+            var rsa = RSA.Create();
+            rsa.ImportRSAPrivateKey(
+                       source: Convert.FromBase64String(configuration["Jwt:Asymmetric:PrivateKey"]), // Use the private key to sign tokens
+                       bytesRead: out int _); // Discard the out variable 
+
+            var securityKey = new RsaSecurityKey(rsa);
+            return new PrivateTokenKey(securityKey);
         }
     }
 }
