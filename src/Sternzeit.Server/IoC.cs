@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Sternzeit.Server.Services.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Sternzeit.Server
 {
@@ -45,8 +46,8 @@ namespace Sternzeit.Server
             var publicKey = JwtService.GetPublicKey(configuration);
             var privateKey = JwtService.GetPrivateTokenKey(configuration);
 
-            services.AddAuthentication()
-               .AddJwtBearer("Asymmetric", options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                {                  
                    options.IncludeErrorDetails = true; // <- great for debugging
 
@@ -54,8 +55,8 @@ namespace Sternzeit.Server
                    options.TokenValidationParameters = new TokenValidationParameters
                    {
                        IssuerSigningKey = publicKey,
-                       ValidAudience = JwtService.Audience,
-                       ValidIssuer = JwtService.Issuer,
+                       ValidAudience = JwtService.GetAudience(configuration),
+                       ValidIssuer = JwtService.GetIssuer(configuration),
                        RequireSignedTokens = true,
                        RequireExpirationTime = true, // <- JWTs are required to have "exp" property set
                        ValidateLifetime = true, // <- the "exp" will be validated

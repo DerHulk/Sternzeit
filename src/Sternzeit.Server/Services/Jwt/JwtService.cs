@@ -19,8 +19,8 @@ namespace Sternzeit.Server.Services.Jwt
     /// </remarks>
     public class JwtService : IJwtService
     {
-        public const string Audience = "";
-        public const string Issuer = "";
+        public string Audience { get; }
+        public string Issuer { get; }
 
         public static readonly TimeSpan DefaultTokenDuration = new TimeSpan(0, 1, 0, 0, 0);
 
@@ -35,6 +35,9 @@ namespace Sternzeit.Server.Services.Jwt
             this.PrivateTokenKey = key ?? throw new ArgumentNullException(nameof(key));
             this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.TimeService = timeService ?? throw new ArgumentNullException(nameof(timeService));
+
+            this.Audience = JwtService.GetAudience(configuration);
+            this.Issuer = JwtService.GetIssuer(configuration);
         }
 
         public string CreateToken(string username)
@@ -98,6 +101,22 @@ namespace Sternzeit.Server.Services.Jwt
 
             var securityKey = new RsaSecurityKey(rsa);
             return new PrivateTokenKey(securityKey);
+        }
+
+        public static string GetAudience(IConfiguration configuration)
+        {
+            if (configuration is null)
+                throw new ArgumentNullException(nameof(configuration));
+
+            return configuration["Jwt:Audience"];
+        }
+
+        public static string GetIssuer(IConfiguration configuration)
+        {
+            if (configuration is null)
+                throw new ArgumentNullException(nameof(configuration));
+
+            return configuration["Jwt:Issuer"];
         }
     }
 }
