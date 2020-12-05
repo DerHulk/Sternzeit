@@ -1,9 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { StorageService } from './storage.service';
-import { TimeService } from './time.service';
 import { WebAuthService } from './web-auth.service';
 
 
@@ -14,7 +11,6 @@ import { WebAuthService } from './web-auth.service';
 export class AccessService {
 
   private authToken: string;
-  private expiresAt: Date;
 
   constructor(private http: HttpClient,
     private webAuthService: WebAuthService) {
@@ -25,9 +21,7 @@ export class AccessService {
       if (!x) {
         return;
       }
-
-      this.authToken = x.token,
-        this.expiresAt = new Date(x.expiresAt);
+      this.authToken = x.token;
 
     });
   }

@@ -180,8 +180,7 @@ export class WebAuthService {
           if (x.ok) {
             //we expected a back url and token in response.
             alert('Great. You are loged in. :-)');
-            this.storageService.save(JwtStorageKey, x.body.token);
-            this.storageService.save(JwtExpiresAtStorageKey, x.body.expiresAt);
+            this.storageService.save(JwtStorageKey, x.body);
 
             this.LogedIn.next(x.body);
           }
@@ -196,7 +195,7 @@ export class WebAuthService {
   }
 
   public requiredLogin(): boolean {
-    return !this.lastLogin.token || new Date(this.lastLogin.expiresAt) <= this.timeService.now();
+    return  !this.lastLogin || !this.lastLogin.token || new Date(this.lastLogin.expiresAt) <= this.timeService.now();
   }
 
 }

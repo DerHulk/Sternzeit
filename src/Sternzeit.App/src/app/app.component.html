@@ -5,20 +5,7 @@
   </h1>
 </div>
 
-<div *ngIf="webAuthAvailable">
-  <label for="Username">Username</label>
-  <input name="Username" [(ngModel)]="username" type="text" />
-
-  <button (click)="register()">Register</button>
-  <button (click)="login()">Login</button>
-</div>
-<div *ngIf="!webAuthAvailable">
-  <span>Your Browswer does not support webauth. :-(</span>
-</div>
-
-<div *ngIf="isLogedIn">
-Your are logged in.
-<button (click)="check()">check</button>
-</div>
+<a routerLink="/home" routerLinkActive="active">Home</a>
+<a routerLink="/login" routerLinkActive="active">Register</a>
 
 <router-outlet></router-outlet>

@@ -1,0 +1,10 @@
+<div *ngIf="webAuthAvailable">
+  <label for="Username">Username</label>
+  <input name="Username" [(ngModel)]="username" type="text" />
+
+  <button (click)="register()">Register</button>
+  <button (click)="login()">Login</button>
+</div>
+<div *ngIf="!webAuthAvailable">
+  <span>Your Browswer does not support webauth. :-(</span>
+</div>
