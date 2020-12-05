@@ -6,6 +6,10 @@ import { environment } from 'src/environments/environment';
 import { promise } from 'protractor';
 import { BehaviorSubject, Observable, pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { StorageService } from './storage.service';
+import { TimeService } from './time.service';
+
+const JwtStorageKey = 'jwt';
 
 interface WebAuthWindow {
   PublicKeyCredential?: any;
@@ -43,8 +47,18 @@ declare var window: WebAuthWindow;
 export class WebAuthService {
 
   public LogedIn: BehaviorSubject<SuccessfullLogin> = new BehaviorSubject(null);
+  private lastLogin: SuccessfullLogin;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+    private storageService: StorageService,
+    private timeService: TimeService) {
+
+    this.lastLogin = this.storageService.read<SuccessfullLogin>(JwtStorageKey);
+
+    if (!this.requiredLogin()) {
+      this.LogedIn.next(this.lastLogin);
+    }
+
   }
 
   public isAvailable(): boolean {
@@ -166,6 +180,9 @@ export class WebAuthService {
           if (x.ok) {
             //we expected a back url and token in response.
             alert('Great. You are loged in. :-)');
+            this.storageService.save(JwtStorageKey, x.body.token);
+            this.storageService.save(JwtExpiresAtStorageKey, x.body.expiresAt);
+
             this.LogedIn.next(x.body);
           }
           else {
@@ -176,6 +193,10 @@ export class WebAuthService {
 
     });
 
+  }
+
+  public requiredLogin(): boolean {
+    return !this.lastLogin.token || new Date(this.lastLogin.expiresAt) <= this.timeService.now();
   }
 
 }

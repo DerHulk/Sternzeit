@@ -2,7 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { StorageService } from './storage.service';
+import { TimeService } from './time.service';
 import { WebAuthService } from './web-auth.service';
+
 
 
 @Injectable({
@@ -16,6 +19,7 @@ export class AccessService {
   constructor(private http: HttpClient,
     private webAuthService: WebAuthService) {
 
+
     this.webAuthService.LogedIn.subscribe(x => {
 
       if (!x) {
@@ -24,6 +28,7 @@ export class AccessService {
 
       this.authToken = x.token,
         this.expiresAt = new Date(x.expiresAt);
+
     });
   }
 
