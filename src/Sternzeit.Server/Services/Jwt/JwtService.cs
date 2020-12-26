@@ -27,10 +27,10 @@ namespace Sternzeit.Server.Services.Jwt
         private IConfiguration Configuration { get; }
         private ITimeService TimeService { get; }
 
-        private PrivateTokenKey PrivateTokenKey { get; }
+        private IPrivateTokenKey PrivateTokenKey { get; }
 
 
-        public JwtService(PrivateTokenKey key, IConfiguration configuration, ITimeService timeService)
+        public JwtService(IPrivateTokenKey key, IConfiguration configuration, ITimeService timeService)
         {
             this.PrivateTokenKey = key ?? throw new ArgumentNullException(nameof(key));
             this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

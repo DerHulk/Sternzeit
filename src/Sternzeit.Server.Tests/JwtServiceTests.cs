@@ -12,6 +12,7 @@ namespace Sternzeit.Server.Tests
     {
         private JwtService Target { get; }
         private Mock<ITimeService> TimeService { get; }
+        private Mock<IPrivateTokenKey> PrivateTokenKey { get; }
         private IConfiguration Configuration { get; }
         private Dictionary<string, string> ConfigurationList { get; }
 
@@ -20,7 +21,8 @@ namespace Sternzeit.Server.Tests
             this.ConfigurationList = new Dictionary<string, string>();
             this.Configuration = new ConfigurationBuilder().AddInMemoryCollection(this.ConfigurationList).Build();
             this.TimeService = new Mock<ITimeService>();
-            this.Target = new JwtService(this.Configuration, this.TimeService.Object);
+            this.PrivateTokenKey = new Mock<IPrivateTokenKey>();
+            this.Target = new JwtService(this.PrivateTokenKey.Object, this.Configuration, this.TimeService.Object);
         }
 
         [Fact]

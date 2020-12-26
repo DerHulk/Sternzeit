@@ -12,8 +12,8 @@ namespace Sternzeit.Server.Services.Jwt
     /// <remarks>
     /// https://stackoverflow.com/questions/60434420/asp-net-core-3-1-jwt-signature-invalid-when-using-addjwtbearer
     /// </remarks>
-    public class PrivateTokenKey
-    {        
+    public class PrivateTokenKey : IPrivateTokenKey
+    {
         public RsaSecurityKey Key { get; }
 
         public PrivateTokenKey(RsaSecurityKey key)

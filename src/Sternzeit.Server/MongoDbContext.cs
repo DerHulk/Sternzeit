@@ -20,11 +20,24 @@ namespace Sternzeit.Server
                 this.Database = client.GetDatabase("Sternzeit");
         }
 
+        protected MongoDbContext(IMongoDatabase database)
+        {
+            this.Database = database ?? throw new ArgumentNullException(nameof(database));
+        }
+
         public IMongoCollection<UserStates> Users
         {
             get
             {
                 return this.Database.GetCollection<UserStates>("Users");
+            }
+        }
+
+        public IMongoCollection<NoteStates> Notes
+        {
+            get
+            {
+                return this.Database.GetCollection<NoteStates>("Notes");
             }
         }
     }

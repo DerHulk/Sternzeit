@@ -8,6 +8,8 @@ namespace Sternzeit.Server.Models
 {
     public class NoteModel
     {
+        public NoteIdModel Id { get; set; }
+
         [Required]
         [StringLength(200)]
         public string Titel { get; set; }        

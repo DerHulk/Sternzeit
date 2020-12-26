@@ -13,6 +13,7 @@ namespace Sternzeit.Server.States
         public Guid Id { get; set; }          
         public string Titel { get; set; }
         public string Text { get; set; }
+        public string Color { get; set; }
         public string[] Tags { get; set; }
         public DateTime CreatedAt { get; set; } 
         public DateTime LastModifiedAt { get; set; }
