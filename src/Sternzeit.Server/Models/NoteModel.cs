@@ -15,5 +15,7 @@ namespace Sternzeit.Server.Models
         public string Titel { get; set; }        
         public string Text { get; set; }
         public string[] Tags { get; set; }
+        
+        public LinkModel[] Links { get; set; }
     }
 }

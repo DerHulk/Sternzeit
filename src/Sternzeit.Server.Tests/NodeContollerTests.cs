@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using Moq;
 using Sternzeit.Server.Controllers;
+using Sternzeit.Server.Models;
 using Sternzeit.Server.Services;
 using Sternzeit.Server.States;
 using System;
@@ -37,7 +38,7 @@ namespace Sternzeit.Server.Tests
             var result = await this.Target.Create(titel);
 
             //assert
-            Assert.IsType<OkResult>(result);
+            Assert.IsType<ActionResult<NoteModel>>(result);
             collection.Verify(x => x.InsertOneAsync(It.Is<NoteStates>(x => x.Titel == titel), It.IsAny<InsertOneOptions>(), It.IsAny<CancellationToken>()));
         }
 
@@ -53,7 +54,8 @@ namespace Sternzeit.Server.Tests
             var result = await this.Target.Create(titel);
 
             //assert
-            Assert.IsType<NoContentResult>(result);
+            Assert.IsType<ActionResult<NoteModel>>(result);
+            Assert.IsType<NoContentResult>(result.Result);
         }
 
     }

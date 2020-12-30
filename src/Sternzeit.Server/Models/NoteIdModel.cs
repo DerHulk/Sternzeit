@@ -7,7 +7,7 @@ namespace Sternzeit.Server.Models
 {
     [System.Diagnostics.DebuggerDisplay("{{Value}}")]
     public class NoteIdModel
-    {
-        public Guid Value { get; }
+    {        
+        public Guid Value { get; set; }
     }
 }
