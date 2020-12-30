@@ -9,12 +9,14 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { AccessService } from './services/access.service';
 import { WebAuthService } from './services/web-auth.service';
+import { NoteComponent } from './components/note/note.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    NoteComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +26,6 @@ import { WebAuthService } from './services/web-auth.service';
   ],
   providers: [
     { provide: 'window', useValue: window },
-    AccessService, WebAuthService
   ],
   bootstrap: [AppComponent]
 })

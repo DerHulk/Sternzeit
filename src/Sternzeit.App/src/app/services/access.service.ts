@@ -11,19 +11,30 @@ import { WebAuthService } from './web-auth.service';
 export class AccessService {
 
   private authToken: string;
+  public startPoint: string;
 
   constructor(private http: HttpClient,
     private webAuthService: WebAuthService) {
 
 
     this.webAuthService.LogedIn.subscribe(x => {
-
       if (!x) {
         return;
       }
       this.authToken = x.token;
+      this.startPoint = x.startPoint;
 
     });
+
+    this.webAuthService.LogedOut.subscribe(x=> {
+
+      if(x == null)
+        return;
+
+      this.authToken = null;
+      this.startPoint = null;
+    });
+
   }
 
   public get<T>(url: string): Observable<T> {
@@ -37,21 +48,21 @@ export class AccessService {
     const options = {};
     this.setAuthHeader(options);
 
-    return this.http.post<T>(url, value);
+    return this.http.post<T>(url, value, options);
   }
 
-  public put<T>(url: string, value: T): Observable<T> {
+  public put<T>(url: string, value: any): Observable<T> {
     const options = {};
     this.setAuthHeader(options);
 
-    return this.http.put<T>(url, value);
+    return this.http.put<T>(url, value, options);
   }
 
   public delte<T>(url: string): Observable<T> {
     const options = {};
     this.setAuthHeader(options);
 
-    return this.http.delete<T>(url);
+    return this.http.delete<T>(url, options);
   }
 
   private setAuthHeader(options: any) {

@@ -24,8 +24,8 @@ namespace Sternzeit.Server.Controllers
             this.MongoDbContext = mongoDbContext ?? throw new ArgumentNullException(nameof(mongoDbContext));
         }        
 
-        [HttpPut]
-        public async Task<ActionResult<NoteModel>> Create(string titel)
+        [HttpPut(Name= Constants.Routes.CreateNote)]
+        public async Task<ActionResult<NoteModel>> Create([FromBody] string titel)
         {
             if (string.IsNullOrEmpty(titel))
                 return this.NoContent();

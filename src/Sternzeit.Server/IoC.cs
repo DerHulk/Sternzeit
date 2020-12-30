@@ -66,7 +66,7 @@ namespace Sternzeit.Server
                });
 
             services.AddSingleton<IJwtService, JwtService>();
-            services.AddSingleton(privateKey);
+            services.AddSingleton<IPrivateTokenKey>(privateKey);
 
             return services;
         }

@@ -98,7 +98,12 @@ namespace Sternzeit.Server.Controllers
 
                 var expiresAt = this.TimeService.Now().AddHours(1);
                 var token = this.JwtService.CreateToken(state.UserName, expiresAt);
-                return this.Ok( new { token, expiresAt = this.TimeService.ToUnixTimeMilliseconds(expiresAt) });
+                return this.Ok( 
+                    new { 
+                        token, 
+                        expiresAt = this.TimeService.ToUnixTimeMilliseconds(expiresAt) ,
+                        startPoint = this.Url.Link(Constants.Routes.Home, null),
+                    });
             }
 
             return this.BadRequest();

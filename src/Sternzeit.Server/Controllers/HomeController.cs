@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sternzeit.Server.Models;
 
 namespace Sternzeit.Server.Controllers
 {
@@ -11,10 +12,13 @@ namespace Sternzeit.Server.Controllers
     [Route("Home")]
     public class HomeController : Controller
     {
-        [Route("Index")]
+        [Route("Index", Name= Constants.Routes.Home)]
         public IActionResult Index()
-        {
-            return Json(new string[] { "Hallo", "Welt" });
+        {            
+            var links = new [] { 
+                new LinkModel(){ Description = "Create", HttpMethod="PUT", Rel="Note", Url = this.Url.Link(Constants.Routes.CreateNote, new { titel="" }) }
+            };
+            return Json(links);
         }
     }
 }

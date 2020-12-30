@@ -31,5 +31,9 @@ export class LoginComponent implements OnInit {
     this.webAuth.loadPreconditionLogin(this.username).subscribe(x => this.webAuth.login(x));
   }
 
+  logout(){
+    this.webAuth.logout();
+  }
+
 
 }

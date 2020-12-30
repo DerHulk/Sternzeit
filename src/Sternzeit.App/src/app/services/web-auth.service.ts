@@ -37,6 +37,7 @@ class LoginPreconditions {
 export class SuccessfullLogin {
   token: string;
   expiresAt: number;
+  startPoint: string;
 }
 
 declare var window: WebAuthWindow;
@@ -47,6 +48,7 @@ declare var window: WebAuthWindow;
 export class WebAuthService {
 
   public LogedIn: BehaviorSubject<SuccessfullLogin> = new BehaviorSubject(null);
+  public LogedOut: BehaviorSubject<Date> = new BehaviorSubject(null);
   private lastLogin: SuccessfullLogin;
 
   constructor(private http: HttpClient,
@@ -195,7 +197,12 @@ export class WebAuthService {
   }
 
   public requiredLogin(): boolean {
-    return  !this.lastLogin || !this.lastLogin.token || new Date(this.lastLogin.expiresAt) <= this.timeService.now();
+    return !this.lastLogin || !this.lastLogin.token || new Date(this.lastLogin.expiresAt) <= this.timeService.now();
+  }
+
+  public logout() {
+    this.storageService.save(JwtStorageKey, null);
+    this.LogedOut.next(new Date());
   }
 
 }

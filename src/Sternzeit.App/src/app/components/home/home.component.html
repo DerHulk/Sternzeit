@@ -2,4 +2,8 @@
 <div>
   Your are logged in.
   <button (click)="check()">check</button>
+
+  <label for="NewNote">Create a new Note</label>
+  <input id="NewNote" #NewNoteTitel type="text"/>
+  <button (click)="createNote(NewNoteTitel.value)">Create</button>
 </div>
