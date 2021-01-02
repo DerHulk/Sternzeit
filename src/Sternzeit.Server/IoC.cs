@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Sternzeit.Server.Services.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 namespace Sternzeit.Server
 {
@@ -62,6 +63,7 @@ namespace Sternzeit.Server
                        ValidateLifetime = true, // <- the "exp" will be validated
                        ValidateAudience = true,
                        ValidateIssuer = true,
+                       NameClaimType = ClaimTypes.NameIdentifier,
                    };
                });
 

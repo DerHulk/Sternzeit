@@ -26,9 +26,9 @@ export class AccessService {
 
     });
 
-    this.webAuthService.LogedOut.subscribe(x=> {
+    this.webAuthService.LogedOut.subscribe(x => {
 
-      if(x == null)
+      if (x == null)
         return;
 
       this.authToken = null;
@@ -54,6 +54,11 @@ export class AccessService {
   public put<T>(url: string, value: any): Observable<T> {
     const options = {};
     this.setAuthHeader(options);
+    this.setContentTypJson(options);
+
+    if (this.isString(value)) {
+      value = this.quoteString(value);
+    }
 
     return this.http.put<T>(url, value, options);
   }
@@ -66,15 +71,29 @@ export class AccessService {
   }
 
   private setAuthHeader(options: any) {
-    const httpOptions = {
-      headers: new HttpHeaders()
-    };
 
     if (this.authToken) {
       options['headers'] = new HttpHeaders()
         .append('authorization', 'Bearer ' + this.authToken);
     }
 
-    return httpOptions;
+  }
+
+  private setContentTypJson(options: any) {
+
+    if (!options['headers']) {
+      options['headers'] = new HttpHeaders();
+    }
+
+    options['headers'] = options['headers']
+      .append('content-type', 'application/json ');
+  }
+
+  private isString(value: any): boolean {
+    return typeof value === 'string' || value instanceof String;
+  }
+
+  private quoteString(value: any): string {
+    return '"' + value + '"';
   }
 }

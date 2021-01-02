@@ -12,6 +12,7 @@ namespace Sternzeit.Server
         public class Routes
         {
             public const string CreateNote = "Sternzeit.Create.Note";
+            public const string GetNote = "Sternzeit.Get.Note";
             public const string Home = "Sternzeit.Home";
         }
     }

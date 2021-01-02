@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Sternzeit.Server.Services;
 
 namespace Sternzeit.Server
 {
@@ -43,9 +45,12 @@ namespace Sternzeit.Server
                                       .AllowCredentials();
                                   });
             });
+            services.AddHttpContextAccessor();
             services.AddWebAuth("localhost", "Sternzeit", Configuration.GetSection("WebAuth:AdditionalOrigings").Get<string[]>());
             services.AddMongoDb();
             services.AddJwtToken(this.Configuration);
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddTransient<IUserService, UserService>();
             services.AddControllers();
         }
 

@@ -16,11 +16,13 @@ namespace Sternzeit.Server.Controllers
     public class NodeController : ControllerBase
     {
         private ITimeService TimeService { get; }
+        public IUserService UserService { get; }
         private MongoDbContext MongoDbContext { get; }
 
-        public NodeController(ITimeService timeService, MongoDbContext mongoDbContext)
+        public NodeController(ITimeService timeService, IUserService userService, MongoDbContext mongoDbContext)
         {
             this.TimeService = timeService ?? throw new ArgumentNullException(nameof(timeService));
+            this.UserService = userService ?? throw new ArgumentNullException(nameof(userService));
             this.MongoDbContext = mongoDbContext ?? throw new ArgumentNullException(nameof(mongoDbContext));
         }        
 
@@ -29,11 +31,16 @@ namespace Sternzeit.Server.Controllers
         {
             if (string.IsNullOrEmpty(titel))
                 return this.NoContent();
-            
+
+            var userId = await this.UserService.GetCurrentUserId();
+
+            if (!userId.HasValue)
+                return this.BadRequest();
+
             var state = new NoteStates() { 
              Id = Guid.NewGuid(),
              CreatedAt = this.TimeService.Now(),
-             OwnerId = Guid.Empty,
+             OwnerId = userId.Value,
              Tags = new string[] { },
              Text = string.Empty,
              Color = null,
@@ -46,7 +53,7 @@ namespace Sternzeit.Server.Controllers
             return this.CreatedAtAction(nameof(Get), new { id = model.Id }, model);
         }
 
-        [HttpGet]
+        [HttpGet(Name = Constants.Routes.GetNote)]
         public async Task<ActionResult<NoteModel>> Get(NoteIdModel id) 
         {
             var state = await (await this.MongoDbContext.Notes.FindAsync(x => x.Id == id.Value)).SingleAsync();

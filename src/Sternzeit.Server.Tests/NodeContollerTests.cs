@@ -18,13 +18,16 @@ namespace Sternzeit.Server.Tests
     {
         private NodeController Target { get; }
         private Mock<ITimeService> TimeService { get; }
+        private Mock<IUserService> UserService { get; }
         private Helpers.MongoDbContextMock MongoDb { get; }
+        
 
         public NodeContollerTests()
         {
             this.TimeService = new Mock<ITimeService>();
+            this.UserService = new Mock<IUserService>();
             this.MongoDb = Helpers.MongoDbContextMock.Create();
-            this.Target = new NodeController(this.TimeService.Object, this.MongoDb);
+            this.Target = new NodeController(this.TimeService.Object, this.UserService.Object, this.MongoDb);
         }
 
         [Fact(DisplayName ="Check that a valid note will be created with ok.")]
@@ -33,6 +36,8 @@ namespace Sternzeit.Server.Tests
             //arrange
             var titel = "test";
             var collection = this.MongoDb.CreateMockCollection<NoteStates>("Notes");
+
+            this.UserService.Setup(x => x.GetCurrentUserId()).ReturnsAsync(Guid.Empty);
             
             //act
             var result = await this.Target.Create(titel);
