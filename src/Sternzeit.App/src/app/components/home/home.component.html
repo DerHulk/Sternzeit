@@ -1,9 +1,15 @@
 <p>home works!</p>
 <div>
   Your are logged in.
-  <button (click)="check()">check</button>
 
   <label for="NewNote">Create a new Note</label>
   <input id="NewNote" #NewNoteTitel type="text"/>
   <button (click)="createNote(NewNoteTitel.value)">Create</button>
+
+  <ul>
+    <li *ngFor="let item of NoteLinks">
+        <a [routerLink]="['/note', { sourceUrl: item.url}]">{{item.description}}</a>
+    </li>
+  </ul>
+
 </div>

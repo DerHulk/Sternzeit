@@ -30,8 +30,8 @@ namespace Sternzeit.Server.Controllers
             var userId = await this.UserService.GetCurrentUserId();
             var notes = await (await this.MongoDbContext.Notes.FindAsync(x => x.OwnerId == userId)).ToListAsync();
 
-            links.AddRange(notes.Select(x=> new LinkModel() { Description = x.Titel, HttpMethod = "GET", Rel = "Note", Url = this.Url.Link(Constants.Routes.GetNote, new { id = x.Id }) }).ToArray());
-            links.Add(new LinkModel() { Description = "Create", HttpMethod = "PUT", Rel = "Note", Url = this.Url.Link(Constants.Routes.CreateNote, new { titel = "" }) });            
+            links.AddRange(notes.Select(x=> new LinkModel() { Description = x.Titel, HttpMethod = Constants.HttpVerbs.Get, Rel = Constants.RelTypes.Note, Url = this.Url.Link(Constants.Routes.GetNote, new { id = x.Id }) }).ToArray());
+            links.Add(new LinkModel() { Description = "Create", HttpMethod = Constants.HttpVerbs.Put, Rel = Constants.RelTypes.Note, Url = this.Url.Link(Constants.Routes.CreateNote, new { titel = "" }) });            
 
             return Json(links.ToArray());
         }

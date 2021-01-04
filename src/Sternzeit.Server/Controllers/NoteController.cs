@@ -12,14 +12,14 @@ using MongoDB.Driver;
 namespace Sternzeit.Server.Controllers
 {
     [Authorize]    
-    [Route("Node")]
-    public class NodeController : ControllerBase
+    [Route("Note")]
+    public class NoteController : ControllerBase
     {
         private ITimeService TimeService { get; }
         public IUserService UserService { get; }
         private MongoDbContext MongoDbContext { get; }
 
-        public NodeController(ITimeService timeService, IUserService userService, MongoDbContext mongoDbContext)
+        public NoteController(ITimeService timeService, IUserService userService, MongoDbContext mongoDbContext)
         {
             this.TimeService = timeService ?? throw new ArgumentNullException(nameof(timeService));
             this.UserService = userService ?? throw new ArgumentNullException(nameof(userService));
@@ -54,14 +54,16 @@ namespace Sternzeit.Server.Controllers
         }
 
         [HttpGet(Name = Constants.Routes.GetNote)]
-        public async Task<ActionResult<NoteModel>> Get(NoteIdModel id) 
+        public async Task<ActionResult<NoteModel>> Get([FromRoute] NoteIdModel id)
         {
             var state = await (await this.MongoDbContext.Notes.FindAsync(x => x.Id == id.Value)).SingleAsync();
-            
-            var model = new NoteModel() { 
-             Id = id,
-             Tags = null,
-             Text = state.Text,
+
+            var model = new NoteModel()
+            {
+                Id = id,
+                Tags = null,
+                Titel = state.Titel,
+                Text = state.Text,
             };
 
             return model;

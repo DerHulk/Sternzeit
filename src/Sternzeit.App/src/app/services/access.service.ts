@@ -53,6 +53,7 @@ export class AccessService {
 
   public put<T>(url: string, value: any): Observable<T> {
     const options = {};
+
     this.setAuthHeader(options);
     this.setContentTypJson(options);
 

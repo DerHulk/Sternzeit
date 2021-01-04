@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpVerbs, RelTypes } from 'src/app/constant';
 import { LinkModel } from 'src/app/models/LinkModel';
 import { AccessService } from 'src/app/services/access.service';
 
@@ -10,17 +11,17 @@ import { AccessService } from 'src/app/services/access.service';
 export class HomeComponent implements OnInit {
 
   private links: LinkModel[];
+  public NoteLinks: LinkModel[];
 
   constructor(private accessService: AccessService) { }
 
   ngOnInit(): void {
 
     this.accessService.get<LinkModel[]>(this.accessService.startPoint)
-      .subscribe(x=> this.links = x);
-  }
-
-  check() {
-    this.accessService.get<any>('https://localhost:44370/Home/Index').subscribe(x => alert('Home sweet home!'));
+      .subscribe(x=> {
+        this.links = x;
+        this.NoteLinks = (x.filter(x=> x.rel == RelTypes.Note && x.httpMethod == HttpVerbs.Get));
+      });
   }
 
   createNote(titel:string){

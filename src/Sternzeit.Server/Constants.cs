@@ -15,5 +15,22 @@ namespace Sternzeit.Server
             public const string GetNote = "Sternzeit.Get.Note";
             public const string Home = "Sternzeit.Home";
         }
+
+        /// <summary>
+        /// Relation-Types
+        /// </summary>
+        public class RelTypes
+        {
+            public const string Note = "Note";
+        }
+
+        public class HttpVerbs
+        {
+            public const string Get = "GET";
+            public const string Put = "PUT";
+            public const string Post = "POST";
+            public const string Delete = "DELETE";
+            public const string Patch = "PATCH";
+        }
     }
 }
