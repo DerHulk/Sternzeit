@@ -70,9 +70,17 @@ namespace Sternzeit.Server.Controllers
         }
 
         [HttpPatch]
-        public ActionResult Edit(NoteModel model)
+        public async Task<ActionResult> Edit([FromBody]NoteModel model)
         {
-            throw new NotImplementedException();
+            var state = await (await this.MongoDbContext.Notes.FindAsync(x => x.Id == model.Id.Value)).SingleAsync();
+
+            state.Titel = model.Titel;
+            state.Text = model.Text;
+            state.LastModifiedAt = this.TimeService.Now();
+
+            await this.MongoDbContext.Notes.ReplaceOneAsync(x => x.Id == model.Id.Value, state);
+
+            return this.NoContent();            
         }
 
         [HttpDelete]

@@ -51,6 +51,13 @@ export class AccessService {
     return this.http.post<T>(url, value, options);
   }
 
+  public patch<T>(url: string, value: T): Observable<T> {
+    const options = {};
+    this.setAuthHeader(options);
+
+    return this.http.patch<T>(url, value, options);
+  }
+
   public put<T>(url: string, value: any): Observable<T> {
     const options = {};
 

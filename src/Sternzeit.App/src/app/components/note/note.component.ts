@@ -11,13 +11,18 @@ import { AccessService } from 'src/app/services/access.service';
 export class NoteComponent implements OnInit {
 
   note: NoteModel;
+  sourceUrl: string;
 
   constructor(private route: ActivatedRoute, private accessService: AccessService) { }
 
   ngOnInit(): void {
 
-    const url = this.route.snapshot.paramMap.get('sourceUrl');
-    this.accessService.get<NoteModel>(url).subscribe(x=> this.note = x);
+    this.sourceUrl = this.route.snapshot.paramMap.get('sourceUrl');
+    this.accessService.get<NoteModel>(this.sourceUrl).subscribe(x=> this.note = x);
+  }
+
+  save(): void {
+    this.accessService.patch(this.sourceUrl, this.note).subscribe(x=> x);
   }
 
 }
