@@ -23,6 +23,7 @@
     "@angular/router": "~10.2.0",
     "@types/chrome": "0.0.125",
     "@types/webappsec-credential-management": "^0.6.0",
+    "bootstrap": "^5.0.0-beta1",
     "core-js": "^3.6.5",
     "rxjs": "~6.6.3",
     "service": "^0.1.4",

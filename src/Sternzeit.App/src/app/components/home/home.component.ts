@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpVerbs, RelTypes } from 'src/app/constant';
-import { LinkModel } from 'src/app/models/LinkModel';
+import { LinkModel } from 'src/app/models/linkModel';
 import { AccessService } from 'src/app/services/access.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 
