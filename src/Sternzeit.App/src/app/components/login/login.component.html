@@ -1,11 +1,23 @@
-<div *ngIf="webAuthAvailable">
-  <label for="Username">Username</label>
-  <input name="Username" [(ngModel)]="username" type="text" />
 
-  <button (click)="register()">Register</button>
-  <button (click)="login()">Login</button>
-  <button (click)="logout()">Logout</button>
+
+<div class="d-flex justify-content-center form-group">
+  <div *ngIf="webAuthAvailable"  >
+    <div class="form-group p-2">
+      <label for="Username">Username</label>
+      <input name="Username"  class="form-control" [(ngModel)]="username" type="text" />
+    </div>
+    <div class="p-2">
+      <button (click)="login()" class="btn btn-primary btn-lg btn-block w-100" >Login</button>
+    </div>
+    <div class="p-2">
+      <button (click)="register()" class="btn btn-success btn-lg btn-block w-100" >Register</button>
+    </div>
+    <div class="p-2">
+      <button (click)="logout()" class="btn btn-primary w-100" >Logout</button>
+    </div>
+  </div>
 </div>
+
 <div *ngIf="!webAuthAvailable">
   <span>Your Browswer does not support webauth. :-(</span>
 </div>
