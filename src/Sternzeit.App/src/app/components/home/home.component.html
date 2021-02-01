@@ -1,19 +1,10 @@
-<div>
-
+<div class="input-group mb-3">
+  <input id="NewNote" #NewNoteTitel class="form-control" placeholder="Create a new note." type="text"/>
+  <button (click)="createNote(NewNoteTitel.value)" class="btn btn-outline-primary" >Create</button>
 </div>
 
-<p>home works!</p>
-<div>
-  Your are logged in.
-
-  <label for="NewNote">Create a new Note</label>
-  <input id="NewNote" #NewNoteTitel type="text"/>
-  <button (click)="createNote(NewNoteTitel.value)">Create</button>
-
-  <ul>
-    <li *ngFor="let item of NoteLinks">
-        <a [routerLink]="['/note', { sourceUrl: item.url}]">{{item.description}}</a>
-    </li>
-  </ul>
-
-</div>
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let item of NoteLinks">
+      <a class="link-primary" [routerLink]="['/note', { sourceUrl: item.url}]">{{item.description}}</a>
+  </li>
+</ul>

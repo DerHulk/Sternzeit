@@ -14,20 +14,20 @@ using Xunit;
 
 namespace Sternzeit.Server.Tests
 {
-    public class NodeContollerTests
+    public class NoteContollerTests
     {
-        private NodeController Target { get; }
+        private NoteController Target { get; }
         private Mock<ITimeService> TimeService { get; }
         private Mock<IUserService> UserService { get; }
         private Helpers.MongoDbContextMock MongoDb { get; }
         
 
-        public NodeContollerTests()
+        public NoteContollerTests()
         {
             this.TimeService = new Mock<ITimeService>();
             this.UserService = new Mock<IUserService>();
             this.MongoDb = Helpers.MongoDbContextMock.Create();
-            this.Target = new NodeController(this.TimeService.Object, this.UserService.Object, this.MongoDb);
+            this.Target = new NoteController(this.TimeService.Object, this.UserService.Object, this.MongoDb);
         }
 
         [Fact(DisplayName ="Check that a valid note will be created with ok.")]
