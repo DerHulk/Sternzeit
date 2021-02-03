@@ -1,7 +1,14 @@
-<h1>{{note.titel}}</h1>
-<p>{{note.text}}</p>
 
-<input [(ngModel)]="note.titel" />
-<label>Text</label>
-<input [(ngModel)]="note.text" />
-<button (click)="save()">Save</button>
+<div class="row p-1">
+  <input [(ngModel)]="note.titel" />
+</div>
+<div class="row p-1">
+  <textarea [(ngModel)]="note.text" placeholder="Enter your node text here." ></textarea>
+</div>
+<div class="row">
+  <button (click)="save()" class="btn btn-primary btn-lg btn-block w-100">Save</button>
+</div>
+
+
+
+

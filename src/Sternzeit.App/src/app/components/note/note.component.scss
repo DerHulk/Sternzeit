@@ -1,0 +1,14 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+
+input {
+  border: none;
+  font-size: 2.4em;
+}
+
+textarea {
+  border: none;
+  background-color: $light;
+  min-height: 250px;
+}
