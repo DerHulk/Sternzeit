@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { MarkdownModule } from 'ngx-markdown';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,6 +11,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AccessService } from './services/access.service';
 import { WebAuthService } from './services/web-auth.service';
 import { NoteComponent } from './components/note/note.component';
+
 
 @NgModule({
   declarations: [
@@ -23,6 +25,7 @@ import { NoteComponent } from './components/note/note.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    MarkdownModule.forRoot(),
   ],
   providers: [
     { provide: 'window', useValue: window },

@@ -25,6 +25,8 @@
     "@types/webappsec-credential-management": "^0.6.0",
     "bootstrap": "^5.0.0-beta1",
     "core-js": "^3.6.5",
+    "feather-icons": "^4.28.0",
+    "ngx-markdown": "^11.0.1",
     "rxjs": "~6.6.3",
     "service": "^0.1.4",
     "zone.js": "~0.11.2"

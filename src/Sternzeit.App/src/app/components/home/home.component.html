@@ -1,6 +1,8 @@
 <div class="input-group mb-3">
   <input id="NewNote" #NewNoteTitel class="form-control" placeholder="Create a new note." type="text"/>
-  <button (click)="createNote(NewNoteTitel.value)" class="btn btn-outline-primary" >Create</button>
+  <button (click)="createNote(NewNoteTitel.value)" class="btn btn-outline-primary" title="Create a new note." >
+    <i data-feather="plus-circle"></i>
+  </button>
 </div>
 
 <ul class="list-group">
@@ -8,3 +10,5 @@
       <a class="link-primary" [routerLink]="['/note', { sourceUrl: item.url}]">{{item.description}}</a>
   </li>
 </ul>
+
+

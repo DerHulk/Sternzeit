@@ -12,7 +12,6 @@ export class NoteComponent implements OnInit {
 
   note: NoteModel;
   sourceUrl: string;
-  editTitel: boolean;
   editText: boolean;
 
   constructor(private route: ActivatedRoute, private accessService: AccessService) { }
@@ -20,7 +19,6 @@ export class NoteComponent implements OnInit {
   ngOnInit(): void {
 
     this.editText = false;
-    this.editTitel = false;
     this.sourceUrl = this.route.snapshot.paramMap.get('sourceUrl');
     this.accessService.get<NoteModel>(this.sourceUrl).subscribe(x=> this.note = x);
   }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpVerbs, RelTypes } from 'src/app/constant';
 import { LinkModel } from 'src/app/models/linkModel';
 import { AccessService } from 'src/app/services/access.service';
+import * as feather from 'feather-icons';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
+    feather.replace();
     this.accessService.get<LinkModel[]>(this.accessService.startPoint)
       .subscribe(x=> {
         this.links = x;

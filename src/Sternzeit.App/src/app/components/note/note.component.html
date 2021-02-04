@@ -1,14 +1,20 @@
-
-<div class="row p-1">
-  <input [(ngModel)]="note.titel" />
+<div *ngIf="note">
+  <div class="row p-1">
+    <input [(ngModel)]="note.titel" />
+  </div>
+  <div class="row p-1" *ngIf="editText; then thenBlock else elseBlock">
+  </div>
+  <div class="row">
+    <button (click)="save()" class="btn btn-primary btn-lg btn-block w-100">Save</button>
+  </div>
 </div>
-<div class="row p-1">
-  <textarea [(ngModel)]="note.text" placeholder="Enter your node text here." ></textarea>
-</div>
-<div class="row">
-  <button (click)="save()" class="btn btn-primary btn-lg btn-block w-100">Save</button>
-</div>
 
+<ng-template #thenBlock>
+  <textarea (dblclick)="editText = !editText" class="w-100" [(ngModel)]="note.text" placeholder="Enter your node text here."></textarea>
+</ng-template>
 
-
-
+<ng-template #elseBlock>
+  <markdown (dblclick)="editText = !editText">
+    {{note.text}}
+  </markdown>
+</ng-template>
