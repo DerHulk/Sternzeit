@@ -22,7 +22,7 @@ The following features are on the plan
 - [ct](https://github.com/jamct/webauthn-start)
 
 ### For Markdown
-- [ngx-markdown] (https://github.com/jfcere/ngx-markdown)
+- [ngx-markdown](https://github.com/jfcere/ngx-markdown)
 
 ### For NoSql
-- MongoDB (https://www.mongodb.com/de)
+- [MongoDB](https://www.mongodb.com/de)
